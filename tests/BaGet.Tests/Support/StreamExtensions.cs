@@ -7,7 +7,10 @@ namespace BaGet.Tests
     {
         public static string ToPrettifiedJson(this Stream jsonStream)
         {
-            using var writer = new StringWriter();
+            using var writer = new StringWriter(new System.Text.StringBuilder(), System.Globalization.CultureInfo.InvariantCulture)
+            {
+                NewLine = "\n",
+            };
             using var jsonWriter = new JsonTextWriter(writer)
             {
                 Formatting = Formatting.Indented,
