@@ -1,8 +1,11 @@
-FROM mcr.microsoft.com/dotnet/aspnet:3.1 AS base
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+
+FROM --platform=$TARGETPLATFORM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 COPY /src .
 RUN dotnet restore BaGet
@@ -12,7 +15,7 @@ FROM build AS publish
 RUN dotnet publish BaGet -c Release -o /app
 
 FROM base AS final
-LABEL org.opencontainers.image.source="https://github.com/loic-sharma/BaGet"
+LABEL org.opencontainers.image.source="https://github.com/lexxsoft/BaGet"
 WORKDIR /app
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "BaGet.dll"]
